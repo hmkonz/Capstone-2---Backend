@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "default": {},
+  "title": "Root Schema",
+  "required": [
+  ],
+  "properties": {
+      "email": {
+          "type": "string",
+          "default": "",
+          "title": "The email Schema",
+          "examples": [
+              "hmkonz@yahoo.com"
+          ]
+      },
+      "firstNameBilling": {
+          "type": "string",
+          "default": "",
+          "title": "The firstName Schema",
+          "examples": [
+              "Winston"
+          ]
+      },
+      "lastNameBilling": {
+          "type": "string",
+          "default": "",
+          "title": "The lastName Schema",
+          "examples": [
+              "Konz"
+          ]
+      },
+      "billingAddress": {
+          "type": "string",
+          "default": "",
+          "title": "The billingAddress Schema",
+          "examples": [
+              "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424"
+          ]
+      },
+      "firstNameShipping": {
+        "type": "string",
+        "default": "",
+        "title": "The firstName Schema",
+        "examples": [
+            "Winston"
+        ]
+    },
+    "lastNameShipping": {
+        "type": "string",
+        "default": "",
+        "title": "The lastName Schema",
+        "examples": [
+            "Konz"
+        ]
+    },
+      "shippingAddress": {
+          "type": "string",
+          "default": "",
+          "title": "The shippingAddress Schema",
+          "examples": [
+              "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424"
+          ]
+      },
+      "phone": {
+          "type": "string",
+          "default": "",
+          "title": "The phone Schema",
+          "examples": [
+              "617-794-9575"
+          ]
+      },
+      "password": {
+          "type": "string",
+          "default": "",
+          "title": "The password Schema",
+          "examples": [
+              "qwerty"
+          ]
+      },
+      "stripeCustomerId": {
+          "type": ["string", "null"],
+          "default": "",
+          "title": "The stripeCustomerId Schema",
+          "examples": [
+              "asdf7890"
+          ]
+      }
+  },
+  "examples": [{
+      "email": "hmkonz@yahoo.com",
+      "firstNameBilling": "Winston",
+      "lastNameBilling": "Konz",
+      "billingAddress": "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424",
+      "firstNameShipping": "Heather",
+      "lastNameShipping": "Konz",
+      "shippingAddress": "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424",
+      "phone": "617-794-9575",
+      "password": "qwerty",
+      "userId": "asdf7890"
+  }]
+}

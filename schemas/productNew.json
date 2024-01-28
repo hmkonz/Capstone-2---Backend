@@ -1,0 +1,43 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "name",
+        "ingredients",
+        "calorieCount",
+        "category",
+        "price",
+        "imageUrl"
+    ],
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "ingredients": {
+            "type": "string"
+        },
+        "calorieCount": {
+            "type": "string"
+        },
+        "category": {
+            "type": "string"
+        },
+        "price": {
+            "type": "string"
+        },
+        "imageUrl": {
+            "type": "string"
+        }
+    },
+    "examples": [{
+        "name": "Beef \u0026 Salmon",
+        "ingredients": "Grass-raised beef, wild-caught salmon, grass-raised beef liver, flaxseed, grass-raised beef heart, organic carrots, organic cranberries, wild-caught whole ground krill, organic green peas, whole ground pumpkin seeds, organic spinach, organic ginger, sea salt, dried kelp, dried yeast, mixed tocopherols (natural preservative)",
+        "calorieCount": "369 kcal/cup",
+        "category": "dog food",
+        "price": "31.49",
+        "imageUrl": "/images/DogFood_BeefSalmon.jpg"
+    }]
+}

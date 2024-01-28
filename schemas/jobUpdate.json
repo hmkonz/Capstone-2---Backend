@@ -1,0 +1,47 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://our.company.com/jobUpdate.schema.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "title"
+    ],
+    "properties": {
+        "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+            "default": "",
+            "title": "The title Schema",
+            "examples": [
+                "Intelligence analyst"
+            ]
+        },
+        "salary": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "The salary Schema",
+            "examples": [
+                77000
+            ]
+        },
+        "equity": {
+            "type": "string",
+            "pattern": "0|(0?\\.[0-9]+)",
+            "default": 0,
+            "title": "The equity Schema",
+            "examples": [
+                "0"
+            ]
+        }
+    },
+    "examples": [
+        {
+            "title": "Intelligence analyst",
+            "salary": 77000,
+            "equity": 0
+        }
+    ]
+}

@@ -1,0 +1,73 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "cartId",
+        "productName",
+        "productQuantity",
+        "productPrice",
+        "userId",
+        "productId"
+    ],
+    "properties": {
+        "cartId": {
+            "type": "string",
+            "default": "",
+            "title": "The cartId Schema",
+            "examples": [
+                "1"
+            ]
+        },
+        "productName": {
+            "type": "string",
+            "default": "",
+            "title": "The productName Schema",
+            "examples": [
+                "Bison"
+            ]
+        },
+        "productQuantity": {
+            "type": "string",
+            "default": "",
+            "title": "The productQuantity Schema",
+            "examples": [
+                "2"
+            ]
+        },
+        "productPrice": {
+            "type": "string",
+            "default": "",
+            "title": "The productPrice Schema",
+            "examples": [
+                "98.49"
+            ]
+        },
+        "userId": {
+            "type": "number",
+            "default": "",
+            "title": "The userId Schema",
+            "examples": [
+                "3"
+            ]
+        },
+        "productId": {
+            "type": "string",
+            "default": "",
+            "title": "The productId Schema",
+            "examples": [
+                "4"
+            ]
+        }
+    },
+    "examples": [{
+        "cartId": "1",
+        "productName": "Bison",
+        "productQuantity": "2",
+        "productPrice": "98.49",
+        "userId": "3",
+        "productId": "4"
+    }]
+}

@@ -1,0 +1,236 @@
+"use strict";
+
+const db = require("../db");
+const bcrypt = require("bcrypt");
+const { sqlForPartialUpdate } = require("../helpers/sql");
+const {
+  NotFoundError,
+  BadRequestError,
+  UnauthorizedError,
+} = require("../expressError");
+
+const { BCRYPT_WORK_FACTOR } = require("../config.js");
+
+/** Related functions for users. */
+
+class User {
+  /** authenticate user with email, password.
+   *
+   * Returns { email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, password, stripe_customer_id}
+   *
+   * Throws UnauthorizedError is user not found or wrong password.
+   **/
+
+  static async authenticateUser(email, password) {
+    // try to find the user first by seaching for their email
+    const result = await db.query(
+      `SELECT email,
+              first_name_billing AS "firstNameBilling",
+              last_name_billing AS "lastNameBilling",
+              billing_address AS "billingAddress",
+              first_name_shipping AS "firstNameShipping",
+              last_name_shipping AS "lastNameShipping",
+              shipping_address AS "shippingAddress",
+              phone,
+              password,
+              stripe_customer_id AS "StripeCustomerId"
+           FROM users
+           WHERE email = $1`,
+      [email]
+    );
+
+    const user = result.rows[0];
+    console.log("This is user in models/user", user);
+
+    if (user) {
+      // if user is in the database, compare hashed password in db to a new hash from password entered in req.body
+      const isValid = await bcrypt.compare(password, user.password);
+      if (isValid === true) {
+        // for security, delete the logged in user's password
+        delete user.password;
+        return user;
+      }
+    }
+
+    // Throws UnauthorizedError if user not found or wrong password
+    throw new UnauthorizedError("Invalid username/password");
+  }
+
+  /** Register user with email, password entered in register form
+   *
+   * Returns { email }
+   *
+   * Throws BadRequestError on duplicates.
+   **/
+
+  static async register({ email, password }) {
+    // make sure email entered in form is not already in the database
+    const duplicateCheck = await db.query(
+      `SELECT email
+           FROM users
+           WHERE email = $1`,
+      [email]
+    );
+
+    if (duplicateCheck.rows[0]) {
+      throw new BadRequestError(`Duplicate email: ${email}`);
+    }
+
+    // hash the password sent in register form
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
+
+    // create a new user by inserting the data entered in register form into the users table
+    const result = await db.query(
+      `INSERT INTO users 
+           (email,
+            password)
+      VALUES ($1, $2)
+      RETURNING email`,
+      [email, hashedPassword]
+    );
+
+    const user = result.rows[0];
+    console.log("THis is user in models/user", user);
+
+    return user;
+  }
+
+  /** Find all users
+   *
+   * Returns [{ id, email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, stripecustomerId }, ...]
+   **/
+
+  static async findAll() {
+    const result = await db.query(
+      `SELECT   id,
+                email,
+                first_name_billing AS "firstNameBilling",
+                last_name_billing AS "lastNameBilling",
+                billing_address AS "billingAddress",
+                first_name_shipping AS "firstNameShipping",
+                last_name_shipping AS "lastNameShipping",
+                shipping_address AS "shippingAddress",
+                phone,
+                stripe_customer_id AS "stripeCustomerId"
+           FROM users
+           ORDER BY email`
+    );
+
+    return result.rows;
+  }
+
+  /** Given a user email, return data about user
+   *
+   * Returns { id, email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, stripecustomerId }
+   *
+   * Throws NotFoundError if user not found.
+   **/
+
+  static async get(email) {
+    // retrieve the user data of 'email' sent in the request URL
+    const userRes = await db.query(
+      `SELECT id,
+              email,
+              first_name_billing AS "firstNameBilling",
+              last_name_billing AS "lastNameBilling",
+              billing_address AS "billingAddress",
+              first_name_shipping AS "firstNameShipping",
+              last_name_shipping AS "lastNameShipping",
+              shipping_address AS "shippingAddress",
+              phone,
+              stripe_customer_id AS "stripeCustomerId"
+           FROM users
+           WHERE email = $1`,
+      [email]
+    );
+
+    const user = userRes.rows[0];
+
+    if (!user) throw new NotFoundError(`No user with email: ${email}`);
+
+    return user;
+  }
+
+  /** Update user with 'email' with `data`.
+   *
+   * This is a "partial update" --- it's fine if 'data' doesn't contain
+   * all the fields; this only changes provided ones.
+   *
+   * Data can include:
+   *   { email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, password, stripeCustomerId}
+   *
+   * Returns { email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, stripeCustomerId }
+   *
+   * Throws NotFoundError if not found.
+   *
+   * WARNING: this function can set a new password.
+   * Callers of this function must be certain they have validated inputs to this
+   * or serious security risks are opened.
+   */
+
+  static async update(email, data) {
+    // if password is sent in req.body, reset the password by hashing it
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+    }
+
+    // setCols equals "userId"=$1, "first_name_billing"=$2, "last_name_billing"=$3, "billing_address"=$4, "first_name_shipping"=$5, "last_name_shipping"=$6 shipping_address"=$7, "phone"= $8, "password"=$9, "stripeCustomerId"=$10
+
+    // values = data in request body i.e. [ '1', 'blossomkonz@gmail.com', 'Blossom', 'Konz', '1000 Main Street Boston, MA 02215', 'Blossom', 'Konz', '1000 Main Street Boston, MA 02215', '515-555-1000', 'qwerty', 'zxcvbn123456' ]
+    const { setCols, values } = sqlForPartialUpdate(data, {
+      userId: "id",
+      firstNameBilling: "first_name_billing",
+      lastNameBilling: "last_name_billing",
+      billingAddress: "billing_address",
+      firstNameShipping: "first_name_shipping",
+      lastNameShipping: "last_name_shipping",
+      shippingAddress: "shipping_address",
+      phone: "phone",
+      password: "password",
+      stripeCustomerId: "stripe_customer_id",
+    });
+
+    // set column for WHERE expression. idVarIdx: "id" = $10
+    const emailVarIdx = "$" + (values.length + 1);
+
+    // create the SQL query for updating the users table
+    const querySql = `UPDATE users 
+                      SET ${setCols} 
+                      WHERE email = ${emailVarIdx} 
+                      RETURNING id AS "userId",
+                                first_name_billing AS "firstNameBilling",
+                                last_name_billing AS "lastNameBilling",
+                                billing_address AS "billingAddress",
+                                first_name_shipping AS "firstNameShipping",
+                                last_name_shipping AS "lastNameShipping",
+                                shipping_address AS "shippingAddress",
+                                phone,
+                                stripe_customer_id AS "stripeCustomerId"`;
+
+    // retrieve the results of the query above with the values in the request body 'values' and 'id' from the request URL passed in
+    const result = await db.query(querySql, [...values, email]);
+    const user = result.rows[0];
+
+    if (!user) throw new NotFoundError(`No user with email: ${email}`);
+
+    delete user.password;
+    return user;
+  }
+
+  /** Delete given user with 'id' from database; returns undefined. */
+
+  static async remove(email) {
+    let result = await db.query(
+      `DELETE
+           FROM users
+           WHERE email = $1
+           RETURNING email`,
+      [email]
+    );
+    const user = result.rows[0];
+
+    if (!user) throw new NotFoundError(`No user with email: ${email}`);
+  }
+}
+
+module.exports = User;

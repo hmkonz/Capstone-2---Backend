@@ -1,0 +1,25 @@
+{
+  "name": "just_real_food",
+  "version": "1.0.0",
+  "description": "Express backend for Capstone 2 Project",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest -i",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonschema": "^1.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.11.3",
+    "stripe": "^14.10.0"
+  }
+}

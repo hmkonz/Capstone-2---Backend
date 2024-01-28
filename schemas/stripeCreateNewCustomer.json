@@ -1,0 +1,193 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "email",
+        "name",
+        "description",
+        "phone",
+        "homeAddressLine1",
+        "homeAddressLine2",
+        "homeCity",
+        "homeState",
+        "homePostal_code",
+        "homeCountry",
+        "shippingAddressLine1",
+        "shippingAddressLine2",
+        "shippingCity",
+        "shippingState",
+        "shippingPostal_code",
+        "shippingCountry",
+        "shippingName",
+        "shippingPhone"
+    ],
+    "properties": {
+        "email": {
+            "type": "string",
+            "default": "",
+            "title": "The email Schema",
+            "examples": [
+                "hmkonz@yahoo.com"
+            ]
+        },
+        "name": {
+            "type": "string",
+            "default": "",
+            "title": "The name Schema",
+            "examples": [
+                "Heather Konz"
+            ]
+        },
+        "description": {
+            "type": "string",
+            "default": "",
+            "title": "The description Schema",
+            "examples": [
+                "New Customer Created"
+            ]
+        },
+        "phone": {
+            "type": "string",
+            "default": "",
+            "title": "The phone Schema",
+            "examples": [
+                "617-794-9575"
+            ]
+        },
+        "homeAddressLine1": {
+            "type": "string",
+            "default": "",
+            "title": "The homeAddressLine1 Schema",
+            "examples": [
+                "400 N. Park Ave"
+            ]
+        },
+        "homeAddressLine2": {
+            "type": "string",
+            "default": "",
+            "title": "The homeAddressLine2 Schema",
+            "examples": [
+                "Unit 12B"
+            ]
+        },
+        "homeCity": {
+            "type": "string",
+            "default": "",
+            "title": "The homeCity Schema",
+            "examples": [
+                "Breckenridge"
+            ]
+        },
+        "homeState": {
+            "type": "string",
+            "default": "",
+            "title": "The homeState Schema",
+            "examples": [
+                "CO"
+            ]
+        },
+        "homePostal_code": {
+            "type": "string",
+            "default": "",
+            "title": "The homePostal_code Schema",
+            "examples": [
+                "80424"
+            ]
+        },
+        "homeCountry": {
+            "type": "string",
+            "default": "",
+            "title": "The homeCountry Schema",
+            "examples": [
+                "USA"
+            ]
+        },
+        "shippingAddressLine1": {
+            "type": "string",
+            "default": "",
+            "title": "The shippingAddressLine1 Schema",
+            "examples": [
+                "15 COoney Court"
+            ]
+        },
+        "shippingAddressLine2": {
+            "type": "string",
+            "default": "",
+            "title": "The shippingAddressLine2 Schema",
+            "examples": [
+                ""
+            ]
+        },
+        "shippingCity": {
+            "type": "string",
+            "default": "",
+            "title": "The shippingCity Schema",
+            "examples": [
+                "Blue River"
+            ]
+        },
+        "shippingState": {
+            "type": "string",
+            "default": "",
+            "title": "The shippingState Schema",
+            "examples": [
+                "CO"
+            ]
+        },
+        "shippingPostal_code": {
+            "type": "string",
+            "default": "",
+            "title": "The shippingPostal_code Schema",
+            "examples": [
+                "80424"
+            ]
+        },
+        "shippingCountry": {
+            "type": "string",
+            "default": "",
+            "title": "The shippingCountry Schema",
+            "examples": [
+                "USA"
+            ]
+        },
+        "shippingName": {
+            "type": "string",
+            "default": "",
+            "title": "The shippingName Schema",
+            "examples": [
+                "Nick Konz"
+            ]
+        },
+        "shippingPhone": {
+            "type": "string",
+            "default": "",
+            "title": "The shippingPhone Schema",
+            "examples": [
+                "832-515-8130"
+            ]
+        }
+    },
+    "examples": [{
+        "email": "hmkonz@yahoo.com",
+        "name": "Heather Konz",
+        "description": "New Customer Created",
+        "phone": "617-794-9575",
+        "homeAddressLine1": "400 N. Park Ave",
+        "homeAddressLine2": "Unit 12B",
+        "homeCity": "Breckenridge",
+        "homeState": "CO",
+        "homePostal_code": "80424",
+        "homeCountry": "USA",
+        "shippingAddressLine1": "15 COoney Court",
+        "shippingAddressLine2": "",
+        "shippingCity": "Blue River",
+        "shippingState": "CO",
+        "shippingPostal_code": "80424",
+        "shippingCountry": "USA",
+        "shippingName": "Nick Konz",
+        "shippingPhone": "832-515-8130"
+    }]
+}
