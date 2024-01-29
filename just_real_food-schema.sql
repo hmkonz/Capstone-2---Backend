@@ -41,13 +41,13 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE product_order(
-  product_id INTEGER NOT NULL REFERENCES products(id),
-  order_id INTEGER NOT NULL REFERENCES orders(id),
+  product_id INTEGER REFERENCES products(id),
+  order_id INTEGER REFERENCES orders(id),
   PRIMARY KEY(product_id, order_id)
 );
 
 CREATE TABLE carts (
-  id INTEGER PRIMARY KEY,
+  id VARCHAR PRIMARY KEY,
   product_name VARCHAR NOT NULL,
   product_quantity INTEGER DEFAULT '2',
   product_price FLOAT NOT NULL,
@@ -56,9 +56,9 @@ CREATE TABLE carts (
 );
 
 CREATE TABLE product_cart (
-  product_id INTEGER NOT NULL REFERENCES products(id),
-  cart_id INTEGER NOT NULL REFERENCES carts(id),
-  PRIMARY KEY(product_id, cart_id)
+  product_id INTEGER REFERENCES products(id),
+  cart_id VARCHAR REFERENCES carts(id),
+  PRIMARY KEY (product_id, cart_id)
 );
 
 

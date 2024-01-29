@@ -112,7 +112,6 @@ router.get("/name/:name", async function (req, res, next) {
   try {
     // retrieve the data of the specific product with the 'name' sent in the request URL
     const products = await Product.getProductByName(req.params.name);
-
     return res.json({ products });
   } catch (err) {
     return next(err);
@@ -149,7 +148,7 @@ router.get("/category/:category", async function (req, res, next) {
  * Authorization required: Only logged in admins can update products (ensureAdmin middleware checks for that)
  */
 
-router.patch("/:name/:weight", ensureAdmin, async function (req, res, next) {
+router.patch("/:name", ensureAdmin, async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, productUpdateSchema);
     if (!validator.valid) {

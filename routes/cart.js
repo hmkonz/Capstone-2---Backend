@@ -29,14 +29,7 @@ router.post("/", async function (req, res, next) {
     }
 
     // create a new cart with the data passed in
-    const cart = await Cart.createCart({
-      cartId,
-      productName,
-      productPrice,
-      productQuantity,
-      userId,
-      productId,
-    });
+    const cart = await Cart.createCart(req.body);
     console.log("THis is cart in backend/routes/cart", cart);
     return res.status(201).json({ cart });
   } catch (err) {

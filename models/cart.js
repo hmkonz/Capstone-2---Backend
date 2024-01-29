@@ -25,21 +25,21 @@ class Cart {
   }) {
     // check to see if cart id already exists before creating it
     const duplicateCheck = await db.query(
-      `SELECT cartId
+      `SELECT id
             FROM carts
-            WHERE cartId = $1`,
+            WHERE id = $1`,
       [cartId]
     );
 
     if (duplicateCheck.rows[0])
-      throw new BadRequestError(`Duplicate cart with id: ${cartId}`);
+      throw new BadRequestError(`Duplicate cart with id: ${idd}`);
 
     // add new cart data to database and return new cart data
     const result = await db.query(
       `INSERT INTO carts
-            (id, product_name, product_quantity, price , user_id, product_id)
+            (id, product_name, product_quantity, product_price , user_id, product_id)
             VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING id AS "cartId, product_name AS productName, product_quantity AS "productQuantity", product_price AS "productPrice,  user_id AS "userId", product_id AS "productId"`,
+            RETURNING id AS cartId, product_name AS productName, product_quantity AS productQuantity, product_price AS productPrice, user_id AS userId, product_id AS productId`,
       [cartId, productName, productQuantity, productPrice, userId, productId]
     );
     const cart = result.rows[0];
