@@ -6,73 +6,107 @@ const { NotFoundError } = require("../expressError");
 /** Related functions for carts */
 
 class Cart {
-  /** Create a cart, update db, return new cart data.
+  /** Adds a row to cart table with item data
    *
-   * data should be { cartId, productName, productQuantity, productPrice, userId, productId }
+   * data should be { product_name, product_price, user_id, product_id }
    *
-   * Returns { cartId, productName, productQuantity, productPrice, userId, productId }
+   * Returns { id, product_name, product_price, user_id, product_id }
    *
-   * Throws BadRequestError if cart is already in database.
    * */
 
-  static async createCart({
-    cartId,
-    productName,
-    productQuantity,
-    productPrice,
-    userId,
-    productId,
+  static async addItemToCart({
+    product_name,
+    product_price,
+    user_id,
+    product_id,
   }) {
-    // check to see if cart id already exists before creating it
-    const duplicateCheck = await db.query(
-      `SELECT id
-            FROM carts
-            WHERE id = $1`,
-      [cartId]
-    );
-
-    if (duplicateCheck.rows[0])
-      throw new BadRequestError(`Duplicate cart with id: ${idd}`);
-
-    // add new cart data to database and return new cart data
-    const result = await db.query(
+    // add a new row of cart data to database and return all user carts
+    await db.query(
       `INSERT INTO carts
-            (id, product_name, product_quantity, product_price , user_id, product_id)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING id AS cartId, product_name AS productName, product_quantity AS productQuantity, product_price AS productPrice, user_id AS userId, product_id AS productId`,
-      [cartId, productName, productQuantity, productPrice, userId, productId]
+            (product_name, product_price, user_id, product_id)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id, product_name, product_price, user_id, product_id`,
+      [product_name, product_price, user_id, product_id]
     );
-    const cart = result.rows[0];
 
-    return cart;
+    const result = await db.query(
+      `SELECT     product_name,
+                  product_price,
+                  user_id,
+                  product_id
+           FROM carts
+           WHERE user_id = $1`,
+      [user_id]
+    );
+
+    // set 'userCart' equal to the result of the query
+    const userCarts = result.rows;
+    console.log("THis is userCarts in models/cart", userCarts);
+
+    // if there are no results from the query (userCarts is an empty array), return an empty array
+    if (!userCarts.length) return [];
+
+    return userCarts;
+
+    // return getUserCarts(user_id);
   }
 
-  /** Get all carts
+  /** List all carts
    *
-   * Returns [{ cartId, productName, productQuantity, productPrice, userId, productId }, ...]}
+   * Returns [{ id, product_name, product_price, user_id, product_id }, ...]}
+   *
+   * Throws NotFoundError if not found.
+   *
    **/
 
-  static async getAllCarts() {
+  static async listCarts() {
     const result = await db.query(
-      `SELECT     id AS cartId,
-                  product_name AS productName,
-                  product_quantity AS productQuantity,
-                  product_price AS productPrice,
-                  user_id AS userId,
-                  product_id AS productId
-           FROM carts`,
-
-      []
+      `SELECT     product_name,
+                  product_price,
+                  user_id,
+                  product_id
+           FROM carts`
     );
 
-    // set 'carts' equal to the result of the query
-    const cart = result.rows;
+    // set 'allCarts' equal to the result of the query
+    const allCarts = result.rows;
+    console.log("THis is all Carts in models/cart", allCarts);
 
-    // if there are no results from the query (carts is an empty array), throw an error
-    if (!cart.length)
-      throw new NotFoundError(`There are no carts in this user's account`);
+    // if there are no results from the query (userCart is an empty array), throw an error
+    if (!allCarts.length) return [];
 
-    return cart;
+    return allCarts;
+  }
+
+  /** Given a users 'user_id', return all cart items
+   *
+   * Returns [{ id, product_name, product_quantity, product_price, user_id, product_id }, ...]}
+   *
+   * Returns an empty array there are no cart items
+   *
+   **/
+
+  static async getUserCarts(user_id) {
+    // retrieve all the cart data for the user with 'user_id' found in request URL
+    const result = await db.query(
+      `SELECT     product_name,
+                  product_price,
+                  user_id,
+                  product_id
+           FROM carts
+           WHERE user_id = $1`,
+      [user_id]
+    );
+
+    // set 'userCart' equal to the result of the query
+    const userCarts = result.rows;
+    console.log("THis is userCarts in models/cart", userCarts);
+
+    // if there are no results from the query (userCarts is an empty array), return an empty array
+    if (!userCarts.length) return [];
+    console.log("THis is userCarts in models/carts", userCarts);
+
+    return userCarts;
   }
 
   /** Update cart with 'data'.
@@ -81,62 +115,68 @@ class Cart {
    * all the fields; this only changes provided ones.
    *
    * Data can include:
-   *   { cartId, productName, productQuantity, productPrice, userId, productId}
+   *   { id, product_name, product_quantity, product_price, user_id, product_id}
    *
-   * Returns { cartId, productName, productQuantity, productPrice, userId, productId }
+   * Returns { id, product_name, product_quantity, product_price, user_id, product_id }
    *
    * Throws NotFoundError if not found.
    *
    */
 
-  static async updateCart(cartId, data) {
-    // setCols equals "productName"=$1, "productQuantity"=$2, "productPrice"=$3, "userId"=$4, "productId"=$5
+  static async updateCart(user_id, data) {
+    // setCols equals "product_name"=$1, "product_quantity"=$2, "product_price"=$3, "user_id"=$4, "product_id"=$5
 
-    // values = data in request body i.e. [ 'Beef & Salmon - Dog Food', '2', '98.49', '3', '1' ]
+    // values = data in request body i.e. [ 'Beef & Salmon', '2', '98.49', '3', '1' ]
     const { setCols, values } = sqlForPartialUpdate(data, {
-      productName: product_name,
-      productQuantity: product_quantity,
-      productPrice: product_price,
-      userId: user_id,
-      productId: product_id,
+      product_name: "product_name",
+      product_quantity: "product_quantity",
+      product_price: "product_price",
+      product_id: "product_id",
     });
 
-    // set column for WHERE expression. cartIdVarIdx: "cartId" = $6
+    // set column for WHERE expression. cartIdVarIdx: "id" = $6
     const cartIdVarIdx = "$" + (values.length + 1);
 
     // create the SQL query for updating the carts table
     const querySql = `UPDATE carts 
                       SET ${setCols} 
                       WHERE id = ${cartIdVarIdx} 
-                      RETURNING id AS "cartId",
-                                product_name AS "productName",
-                                product_quantity AS "productQuantity",
-                                product_price AS "productPrice",
-                                user_id AS "userId",
-                                product_id AS "productId"`;
+                      RETURNING id,
+                                product_name,
+                                product_quantity,
+                                product_price,
+                                user_id,
+                                product_id`;
 
-    // retrieve the results of the query above with the values in the request body 'values' and 'cartId' from the request URL passed in
-    const result = await db.query(querySql, [...values, cartId]);
+    // retrieve the results of the query above with the values in the request body 'values' and 'id' from the request URL passed in
+    const result = await db.query(querySql, [...values, id]);
     const cart = result.rows[0];
 
-    if (!cart) throw new NotFoundError(`No cart with id: ${cartId}`);
+    if (!cart) throw new NotFoundError(`No cart with user id: ${user_id}`);
 
     return cart;
   }
 
-  /** Delete given cart with 'cartId' from database; returns undefined. */
+  /** Delete the carts of a user with user_id' from database; returns the carts removed */
 
-  static async remove(cartId) {
+  static async removeUserCarts(user_id) {
     let result = await db.query(
       `DELETE
            FROM carts
-           WHERE cartId = $1
-           RETURNING cartId`,
-      [cartId]
+           WHERE user_id = $1
+           RETURNING id,
+                     product_name,
+                     product_price,
+                     user_id,
+                     product_id`,
+      [user_id]
     );
-    const cart = result.rows[0];
+    const carts = result.rows;
 
-    if (!cart) throw new NotFoundError(`No cart with id: ${cartId}`);
+    if (!carts) throw new NotFoundError(`No carts of user with id: ${user_id}`);
+    console.log("THis is carts in models/cart/removeUserCarts", carts);
+
+    return carts;
   }
 }
 

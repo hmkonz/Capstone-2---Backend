@@ -124,15 +124,14 @@ class Admin {
 
   /** Find all admins
    *
-   * Returns [{ email, isAdmin }, ...]
+   * Returns [{ email }, ...]
    **/
 
   static async findAll() {
     const result = await db.query(
       `SELECT email,
-              is_admin
-        FROM admins
-        ORDER BY email`
+       FROM admins
+       ORDER BY email`
     );
 
     return result.rows;
@@ -190,7 +189,7 @@ class Admin {
       password: "password",
     });
 
-    // set column for WHERE expression. emailVarIdx: "email" = $3
+    // set column for WHERE expression. emailVarIdx: "email" = $2
     const emailVarIdx = "$" + (values.length + 1);
 
     // create the SQL query for updating the users table

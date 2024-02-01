@@ -8,22 +8,22 @@ const { NotFoundError } = require("../expressError");
 class Order {
   /** Create an order (from data), update db, return new order data.
    *
-   * data should be { id, date, product_name, quantity, price, subtotal, payment_method, customer_id }
+   * data should be { id, date, product_name, quantity, price, subtotal, payment_method, user_id }
    *
-   * Returns { id, date, productName, quantity, price, subtotal, paymentMethod, customerId  }
+   * Returns { id, date, product_name, quantity, price, subtotal, payment_method, user_id  }
    *
-   * Throws BadRequestError if ordert already in database.
+   * Throws BadRequestError if order is already in database.
    * */
 
-  static async create({
+  static async createOrder({
     id,
     date,
-    productName,
+    product_name,
     quantity,
     price,
     subtotal,
-    paymentMethod,
-    userId,
+    payment_method,
+    user_id,
   }) {
     // check to see if order id already exists before creating it
     const duplicateCheck = await db.query(
@@ -39,33 +39,44 @@ class Order {
     // add new order data (from req.body) to database and return new product data
     const result = await db.query(
       `INSERT INTO orders
-            (id, date, product_name AS productName, quantity, price, subtotal, payment_method AS paymentMethod, user_id AS userId)
+            (id, date, product_name, quantity, price, subtotal, payment_method, user_id)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-            RETURNING id, date, product_name AS "productName", quantity, price, subtotal, payment_method AS "paymentMethod", user_id AS "userId"`,
-      [id, date, productName, quantity, price, subtotal, paymentMethod, userId]
+            RETURNING id, date, product_name, quantity, price, subtotal, payment_method, user_id`,
+      [
+        id,
+        date,
+        product_name,
+        quantity,
+        price,
+        subtotal,
+        payment_method,
+        user_id,
+      ]
     );
     const order = result.rows[0];
 
     return order;
   }
 
-  /** Get all orders
+  /** Given a users 'userId', return their order
    *
-   * Returns [{ id, date, productName, quantity, price, subtotal, paymentMethod, userId }, ...]
+   * Returns [{ id, date, product_name, quantity, price, subtotal, payment_method, *user_id }, ...]
+   *
    **/
 
-  static async getUserOrders() {
+  static async getUserOrders(user_id) {
     const result = await db.query(
       `SELECT     id,
                   to_char(date, 'FMMonth DD, YYYY') AS date,
-                  product_name AS productName,
+                  product_name,
                   quantity,
                   price,
                   subtotal,
-                  payment_method AS paymentMethod,
-                  user_id AS userId
-           FROM orders`,
-      []
+                  payment_method,
+                  user_id 
+           FROM orders
+           WHERE user_id = $1`,
+      [user_id]
     );
 
     // set 'orders' equal to the result of the query

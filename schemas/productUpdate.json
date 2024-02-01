@@ -9,7 +9,7 @@
         "ingredients": {
             "type": "string"
         },
-        "calorieCount": {
+        "calorie_count": {
             "type": "string"
         },
         "category": {
@@ -18,7 +18,13 @@
         "price": {
             "type": "string"
         },
-        "imageUrl": {
+        "image_url1": {
+            "type": "string"
+        },
+        "image_url2": {
+            "type": "string"
+        },
+        "image_url3": {
             "type": "string"
         }
     },

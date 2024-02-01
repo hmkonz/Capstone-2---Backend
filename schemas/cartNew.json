@@ -5,23 +5,13 @@
     "default": {},
     "title": "Root Schema",
     "required": [
-        "cartId",
-        "productName",
-        "productQuantity",
-        "productPrice",
-        "userId",
-        "productId"
+        "product_name",
+        "product_price",
+        "user_id",
+        "product_id"
     ],
     "properties": {
-        "cartId": {
-            "type": "string",
-            "default": "",
-            "title": "The cartId Schema",
-            "examples": [
-                "1"
-            ]
-        },
-        "productName": {
+        "product_name": {
             "type": "string",
             "default": "",
             "title": "The productName Schema",
@@ -29,15 +19,7 @@
                 "Bison"
             ]
         },
-        "productQuantity": {
-            "type": "string",
-            "default": "",
-            "title": "The productQuantity Schema",
-            "examples": [
-                "2"
-            ]
-        },
-        "productPrice": {
+        "product_price": {
             "type": "string",
             "default": "",
             "title": "The productPrice Schema",
@@ -45,7 +27,7 @@
                 "98.49"
             ]
         },
-        "userId": {
+        "user_id": {
             "type": "number",
             "default": "",
             "title": "The userId Schema",
@@ -53,7 +35,7 @@
                 "3"
             ]
         },
-        "productId": {
+        "product_id": {
             "type": "string",
             "default": "",
             "title": "The productId Schema",
@@ -63,11 +45,9 @@
         }
     },
     "examples": [{
-        "cartId": "1",
-        "productName": "Bison",
-        "productQuantity": "2",
-        "productPrice": "98.49",
-        "userId": "3",
-        "productId": "4"
+        "product_name": "Bison",
+        "product_price": "98.49",
+        "user_id": "3",
+        "product_id": "4"
     }]
 }

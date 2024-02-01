@@ -47,19 +47,13 @@ CREATE TABLE product_order(
 );
 
 CREATE TABLE carts (
-  id VARCHAR PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   product_name VARCHAR NOT NULL,
-  product_quantity INTEGER DEFAULT '2',
   product_price FLOAT NOT NULL,
   user_id INTEGER REFERENCES users(id),
   product_id INTEGER REFERENCES products(id)
 );
 
-CREATE TABLE product_cart (
-  product_id INTEGER REFERENCES products(id),
-  cart_id VARCHAR REFERENCES carts(id),
-  PRIMARY KEY (product_id, cart_id)
-);
 
 
 

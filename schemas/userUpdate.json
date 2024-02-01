@@ -15,7 +15,7 @@
               "hmkonz@yahoo.com"
           ]
       },
-      "firstNameBilling": {
+      "first_name_billing": {
           "type": "string",
           "default": "",
           "title": "The firstName Schema",
@@ -23,7 +23,7 @@
               "Winston"
           ]
       },
-      "lastNameBilling": {
+      "last_name_billing": {
           "type": "string",
           "default": "",
           "title": "The lastName Schema",
@@ -31,7 +31,7 @@
               "Konz"
           ]
       },
-      "billingAddress": {
+      "billing_address": {
           "type": "string",
           "default": "",
           "title": "The billingAddress Schema",
@@ -39,7 +39,7 @@
               "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424"
           ]
       },
-      "firstNameShipping": {
+      "first_name_shipping": {
         "type": "string",
         "default": "",
         "title": "The firstName Schema",
@@ -47,7 +47,7 @@
             "Winston"
         ]
     },
-    "lastNameShipping": {
+    "last_name_shipping": {
         "type": "string",
         "default": "",
         "title": "The lastName Schema",
@@ -55,7 +55,7 @@
             "Konz"
         ]
     },
-      "shippingAddress": {
+      "shipping_address": {
           "type": "string",
           "default": "",
           "title": "The shippingAddress Schema",
@@ -79,7 +79,7 @@
               "qwerty"
           ]
       },
-      "stripeCustomerId": {
+      "stripe_customer_id": {
           "type": ["string", "null"],
           "default": "",
           "title": "The stripeCustomerId Schema",
@@ -90,14 +90,14 @@
   },
   "examples": [{
       "email": "hmkonz@yahoo.com",
-      "firstNameBilling": "Winston",
-      "lastNameBilling": "Konz",
-      "billingAddress": "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424",
-      "firstNameShipping": "Heather",
-      "lastNameShipping": "Konz",
-      "shippingAddress": "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424",
+      "first_name_billing": "Winston",
+      "last_name_billing": "Konz",
+      "billing_address": "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424",
+      "first_name_shipping": "Heather",
+      "last_name_shipping": "Konz",
+      "shipping_address": "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424",
       "phone": "617-794-9575",
       "password": "qwerty",
-      "userId": "asdf7890"
+      "stripe_customer_id": "asdf7890"
   }]
 }

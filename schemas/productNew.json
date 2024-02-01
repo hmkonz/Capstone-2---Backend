@@ -7,10 +7,12 @@
     "required": [
         "name",
         "ingredients",
-        "calorieCount",
+        "calorie_count",
         "category",
         "price",
-        "imageUrl"
+        "image_url1",
+        "image_url2",
+        "image_url3"
     ],
     "properties": {
         "name": {
@@ -19,7 +21,7 @@
         "ingredients": {
             "type": "string"
         },
-        "calorieCount": {
+        "calorie_count": {
             "type": "string"
         },
         "category": {
@@ -28,16 +30,24 @@
         "price": {
             "type": "string"
         },
-        "imageUrl": {
+        "image_url1": {
+            "type": "string"
+        },
+        "image_url2": {
+            "type": "string"
+        },
+        "image_url3": {
             "type": "string"
         }
     },
     "examples": [{
         "name": "Beef \u0026 Salmon",
         "ingredients": "Grass-raised beef, wild-caught salmon, grass-raised beef liver, flaxseed, grass-raised beef heart, organic carrots, organic cranberries, wild-caught whole ground krill, organic green peas, whole ground pumpkin seeds, organic spinach, organic ginger, sea salt, dried kelp, dried yeast, mixed tocopherols (natural preservative)",
-        "calorieCount": "369 kcal/cup",
+        "calorie_count": "369 kcal/cup",
         "category": "dog food",
         "price": "31.49",
-        "imageUrl": "/images/DogFood_BeefSalmon.jpg"
+        "image_url1": "/images/DogFood_BeefSalmon.jpg",
+        "image_url2": "/images/Beef&SalmonActualIngredients.jpg",
+        "image_url3": "/images/Beef&SalmonGuaranteedAnalysis.jpg"
     }]
 }
