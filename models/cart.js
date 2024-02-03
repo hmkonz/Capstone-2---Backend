@@ -6,11 +6,11 @@ const { NotFoundError } = require("../expressError");
 /** Related functions for carts */
 
 class Cart {
-  /** Adds a row to cart table with item data
+  /** Adds a new row to cart table with item data and returns all the carts of user with 'user_id'
    *
    * data should be { product_name, product_price, user_id, product_id }
    *
-   * Returns { id, product_name, product_price, user_id, product_id }
+   * Returns [{ id, product_name, product_price, user_id, product_id }, ...]
    *
    * */
 
@@ -20,7 +20,7 @@ class Cart {
     user_id,
     product_id,
   }) {
-    // add a new row of cart data to database and return all user carts
+    // add a new row of cart data to database
     await db.query(
       `INSERT INTO carts
             (product_name, product_price, user_id, product_id)
@@ -29,8 +29,10 @@ class Cart {
       [product_name, product_price, user_id, product_id]
     );
 
+    // get all the carts of user with 'user_id'
     const result = await db.query(
-      `SELECT     product_name,
+      `SELECT     id,
+                  product_name,
                   product_price,
                   user_id,
                   product_id
@@ -39,16 +41,15 @@ class Cart {
       [user_id]
     );
 
-    // set 'userCart' equal to the result of the query
+    // set 'userCarts' equal to the result of the query
     const userCarts = result.rows;
     console.log("THis is userCarts in models/cart", userCarts);
 
     // if there are no results from the query (userCarts is an empty array), return an empty array
     if (!userCarts.length) return [];
 
+    //  Return all the carts of a user with 'user_id'
     return userCarts;
-
-    // return getUserCarts(user_id);
   }
 
   /** List all carts
