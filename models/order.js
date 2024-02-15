@@ -6,51 +6,63 @@ const { NotFoundError } = require("../expressError");
 /** Related functions for accounts */
 
 class Order {
-  /** Create an order (from data), update db, return new order data.
+  /** create an order (from data), add it to the db and return new order data.
    *
-   * data should be { id, date, product_name, quantity, price, subtotal, payment_method, user_id }
+   * data should be { user_id, stripe_customer_id, payment_intent_id, product_id, product_name, product_price, product_quantity, subtotal, total,  shipping, delivery_status, payment_status, timestamp}
    *
-   * Returns { id, date, product_name, quantity, price, subtotal, payment_method, user_id  }
+   * Returns { id, user_id, stripe_customer_id, payment_intent_id, product_id, product_name, product_price, product_quantity, subtotal, total,  shipping, delivery_status, payment_status, timestamp}
    *
    * Throws BadRequestError if order is already in database.
    * */
 
   static async createOrder({
-    id,
-    date,
-    product_name,
-    quantity,
-    price,
-    subtotal,
-    payment_method,
     user_id,
+    stripe_customer_id,
+    payment_intent_id,
+    product_id,
+    product_name,
+    product_price,
+    product_quantity,
+    subtotal,
+    total,
+    shipping,
+    delivery_status,
+    payment_status,
+    timestamp,
   }) {
     // check to see if order id already exists before creating it
-    const duplicateCheck = await db.query(
-      `SELECT id
-            FROM orders
-            WHERE id = $1`,
-      [id]
-    );
+    // const duplicateCheck = await db.query(
+    //   `SELECT id
+    //         FROM orders
+    //         WHERE id = $1`,
+    //   [id]
+    // );
 
-    if (duplicateCheck.rows[0])
-      throw new BadRequestError(`Duplicate order with id: ${id}`);
+    // if (duplicateCheck.rows[0])
+    //   throw new BadRequestError(`Duplicate order with id: ${id}`);
 
-    // add new order data (from req.body) to database and return new product data
+    // add new order data (from req.body) to database and return new order data
     const result = await db.query(
       `INSERT INTO orders
-            (id, date, product_name, quantity, price, subtotal, payment_method, user_id)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-            RETURNING id, date, product_name, quantity, price, subtotal, payment_method, user_id`,
+            (user_id, stripe_customer_id, payment_intent_id, product_id, 
+              product_name, product_price, product_quantity, subtotal, total, shipping, delivery_status, payment_status, timestamp)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            RETURNING id, user_id, stripe_customer_id, payment_intent_id, product_id, 
+            product_name, product_price, product_quantity, subtotal, total, shipping, delivery_status, payment_status, timestamp`,
       [
-        id,
-        date,
-        product_name,
-        quantity,
-        price,
-        subtotal,
-        payment_method,
         user_id,
+        stripe_customer_id,
+        payment_intent_id,
+        product_id,
+        product_name,
+        product_price,
+        product_quantity,
+        subtotal,
+        total,
+        shipping,
+        delivery_status,
+        payment_status,
+        timestamp,
       ]
     );
     const order = result.rows[0];
@@ -58,22 +70,28 @@ class Order {
     return order;
   }
 
-  /** Given a users 'userId', return their order
+  /** Given a users 'user_id', return their order
    *
-   * Returns [{ id, date, product_name, quantity, price, subtotal, payment_method, *user_id }, ...]
+   * Returns [{ id, user_id, stripe_customer_id, payment_intent_id, product_id, product_name, product_price, product_quantity, subtotal, total, shipping, delivery_status, payment_status, timestamp }, ...]
    *
    **/
 
   static async getUserOrders(user_id) {
     const result = await db.query(
       `SELECT     id,
-                  to_char(date, 'FMMonth DD, YYYY') AS date,
-                  product_name,
-                  quantity,
-                  price,
+                  user_id,
+                  stripe_customer_id,
+                  payment_intent_id,
+                  product_id, 
+                  product_name, 
+                  product_price, 
+                  product_quantity,
                   subtotal,
-                  payment_method,
-                  user_id 
+                  total,
+                  shipping,
+                  delivery_status,
+                  payment_status,
+                  timestamp  
            FROM orders
            WHERE user_id = $1`,
       [user_id]
@@ -81,7 +99,7 @@ class Order {
 
     // set 'orders' equal to the result of the query
     const orders = result.rows;
-    console.log("THis is orders in models/order", orders);
+    console.log("THis is result in models/order", result);
 
     // if there are no results from the query (orders is an empty array), throw an error
     if (!orders.length) throw new NotFoundError(`No orders have been made yet`);

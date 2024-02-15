@@ -1,11 +1,8 @@
 "use strict";
 
-/** Routes for payments */
-
-const jsonschema = require("jsonschema");
-
 const express = require("express");
 const { BadRequestError } = require("../expressError");
+const jsonschema = require("jsonschema");
 
 const stripeCreateNewCustomerSchema = require("../schemas/stripeCreateNewCustomer.json");
 
@@ -60,6 +57,8 @@ router.post("/", async function (req, res, next) {
         phone: req.body.shippingPhone,
       },
     });
+
+    console.log("THis is customer in backend/routes/stripeCustomers", customer);
     return res.status(201).json({ customer });
   } catch (err) {
     return next(err);

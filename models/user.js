@@ -16,7 +16,7 @@ const { BCRYPT_WORK_FACTOR } = require("../config.js");
 class User {
   /** authenticate user with email, password.
    *
-   * Returns { email, first_name_billing, last_name_billing, billing_address, first_name_shipping, last_name_shipping, shipping_address, phone, password, stripe_customer_id}
+   * Returns { email, name, password, stripe_customer_id}
    *
    * Throws UnauthorizedError is user not found or wrong password.
    **/
@@ -25,13 +25,7 @@ class User {
     // try to find the user first by seaching for their email
     const result = await db.query(
       `SELECT email,
-              first_name_billing,
-              last_name_billing,
-              billing_address,
-              first_name_shipping,
-              last_name_shipping,
-              shipping_address,
-              phone,
+              name,
               password,
               stripe_customer_id
            FROM users
@@ -97,20 +91,14 @@ class User {
 
   /** Find all users
    *
-   * Returns [{ email, first_name_billing, last_name_billing, billing_address, first_name_shipping, last_name_shipping, shipping_address, phone, password, stripe_customer_id }, ...]
+   * Returns [{ email, name, password, stripe_customer_id}, ...]
    **/
 
   static async findAll() {
     const result = await db.query(
       `SELECT   id,
                 email,
-                first_name_billing,
-                last_name_billing,
-                billing_address,
-                first_name_shipping,
-                last_name_shipping,
-                shipping_address,
-                phone,
+                name,
                 stripe_customer_id
            FROM users
            ORDER BY email`
@@ -121,23 +109,17 @@ class User {
 
   /** Given a user email, return data about user
    *
-   * Returns { email, first_name_billing, last_name_billing, billing_address, first_name_shipping, last_name_shipping, shipping_address, phone, password, stripe_customer_id }
+   * Returns { email, name, password, stripe_customer_id}
    *
    * Throws NotFoundError if user not found.
    **/
 
   static async get(email) {
-    // retrieve the user data of 'email' sent in the request URL
+    // retrieve the data of user with 'email' sent in the request URL
     const userRes = await db.query(
       `SELECT id,
               email,
-              first_name_billing,
-              last_name_billing,
-              billing_address,
-              first_name_shipping,
-              last_name_shipping,
-              shipping_address,
-              phone,
+              name,
               stripe_customer_id
            FROM users
            WHERE email = $1`,
@@ -157,9 +139,9 @@ class User {
    * all the fields; this only changes provided ones.
    *
    * Data can include:
-   *   { email, first_name_billing, last_name_billing, billing_address, first_name_shipping, last_name_shippingg, shipping_address, phone, password, stripe_customer_id}
+   *   { email, name, password, stripe_customer_id}
    *
-   * Returns { id. email, first_name_billing, last_name_billing, billing_address, first_name_shipping, last_name_shipping, shipping_address, phone, password, stripe_customer_id }
+   * Returns { id, email, name, password, stripe_customer_id}
    *
    * Throws NotFoundError if not found.
    *
@@ -174,23 +156,17 @@ class User {
       data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
     }
 
-    // setCols equals "id"=$1, "first_name_billing"=$2, "last_name_billing"=$3, "billing_address"=$4, "first_name_shipping"=$5, "last_name_shipping"=$6 shipping_address"=$7, "phone"= $8, "password"=$9, "stripeCustomerId"=$10
+    // setCols equals "id"=$1, "name"=$2, "password"=$3, "stripeCustomerId"=$4
 
     // values = data in request body i.e. [ '1', 'blossomkonz@gmail.com', 'Blossom', 'Konz', '1000 Main Street Boston, MA 02215', 'Blossom', 'Konz', '1000 Main Street Boston, MA 02215', '515-555-1000', 'qwerty', 'zxcvbn123456' ]
     const { setCols, values } = sqlForPartialUpdate(data, {
       id: id,
-      first_name_billing: "first_name_billing",
-      last_name_billing: "last_name_billing",
-      billing_address: "billing_address",
-      first_name_shipping: "first_name_shipping",
-      last_name_shipping: "last_name_shipping",
-      shipping_address: "shipping_address",
-      phone: "phone",
+      name: "name",
       password: "password",
       stripe_customer_id: "stripe_customer_id",
     });
 
-    // set column for WHERE expression. idVarIdx: "id" = $10
+    // set column for WHERE expression. emailVarIdx: "id" = $5
     const emailVarIdx = "$" + (values.length + 1);
 
     // create the SQL query for updating the users table
@@ -198,16 +174,10 @@ class User {
                       SET ${setCols} 
                       WHERE email = ${emailVarIdx} 
                       RETURNING id,
-                                first_name_billing",
-                                last_name_billing",
-                                billing_address,
-                                first_name_shipping,
-                                last_name_shipping,
-                                shipping_address,
-                                phone,
+                                name",
                                 stripe_customer_id`;
 
-    // retrieve the results of the query above with the values in the request body 'values' and 'id' from the request URL passed in
+    // retrieve the results of the query above with the values in the request body 'values' and 'email' from the request URL passed in
     const result = await db.query(querySql, [...values, email]);
     const user = result.rows[0];
 

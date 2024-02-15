@@ -15,60 +15,12 @@
               "hmkonz@yahoo.com"
           ]
       },
-      "first_name_billing": {
+      "name": {
           "type": "string",
           "default": "",
           "title": "The firstName Schema",
           "examples": [
               "Winston"
-          ]
-      },
-      "last_name_billing": {
-          "type": "string",
-          "default": "",
-          "title": "The lastName Schema",
-          "examples": [
-              "Konz"
-          ]
-      },
-      "billing_address": {
-          "type": "string",
-          "default": "",
-          "title": "The billingAddress Schema",
-          "examples": [
-              "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424"
-          ]
-      },
-      "first_name_shipping": {
-        "type": "string",
-        "default": "",
-        "title": "The firstName Schema",
-        "examples": [
-            "Winston"
-        ]
-    },
-    "last_name_shipping": {
-        "type": "string",
-        "default": "",
-        "title": "The lastName Schema",
-        "examples": [
-            "Konz"
-        ]
-    },
-      "shipping_address": {
-          "type": "string",
-          "default": "",
-          "title": "The shippingAddress Schema",
-          "examples": [
-              "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424"
-          ]
-      },
-      "phone": {
-          "type": "string",
-          "default": "",
-          "title": "The phone Schema",
-          "examples": [
-              "617-794-9575"
           ]
       },
       "password": {
@@ -90,13 +42,7 @@
   },
   "examples": [{
       "email": "hmkonz@yahoo.com",
-      "first_name_billing": "Winston",
-      "last_name_billing": "Konz",
-      "billing_address": "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424",
-      "first_name_shipping": "Heather",
-      "last_name_shipping": "Konz",
-      "shipping_address": "400 N. Park Ave. Unit 12B Breckenridge Colorado 80424",
-      "phone": "617-794-9575",
+      "name": "Winston",
       "password": "qwerty",
       "stripe_customer_id": "asdf7890"
   }]

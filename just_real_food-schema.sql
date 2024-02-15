@@ -1,13 +1,7 @@
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   email TEXT UNIQUE,
-  first_name_billing TEXT,
-  last_name_billing TEXT,
-  billing_address VARCHAR,
-  first_name_shipping TEXT,
-  last_name_shipping TEXT,
-  shipping_address VARCHAR,
-  phone VARCHAR,
+  name TEXT,
   password TEXT NOT NULL,
   stripe_customer_id VARCHAR unique
 );
@@ -18,7 +12,7 @@ CREATE TABLE admins (
 );
 
 CREATE TABLE products (
-  id SERIAL PRIMARY KEY,
+  id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   ingredients VARCHAR NOT NULL,
   calorie_count VARCHAR NOT NULL,
@@ -31,28 +25,28 @@ CREATE TABLE products (
 
 CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
-  date DATE NOT NULL,
-  product_name VARCHAR NOT NULL,
-  quantity INTEGER NOT NULL,
-  price FLOAT NOT NULL,
+  user_id INTEGER REFERENCES users(id) NOT NULL,
+  stripe_customer_id VARCHAR NOT NULL,
+  payment_intent_id VARCHAR,
+  product_id VARCHAR,    
+  product_name VARCHAR,
+  product_price VARCHAR,
+  product_quantity INTEGER,
   subtotal FLOAT,
-  payment_method VARCHAR NOT NULL,
-  user_id INTEGER REFERENCES users(id) 
+  total FLOAT,
+  shipping VARCHAR,
+  delivery_status VARCHAR,
+  payment_status VARCHAR,
+  timestamp VARCHAR
 );
 
 CREATE TABLE product_order(
-  product_id INTEGER REFERENCES products(id),
+  product_id TEXT REFERENCES products(id),
   order_id INTEGER REFERENCES orders(id),
   PRIMARY KEY(product_id, order_id)
 );
 
-CREATE TABLE carts (
-  id SERIAL PRIMARY KEY,
-  product_name VARCHAR NOT NULL,
-  product_price FLOAT NOT NULL,
-  user_id INTEGER REFERENCES users(id),
-  product_id INTEGER REFERENCES products(id)
-);
+
 
 
 

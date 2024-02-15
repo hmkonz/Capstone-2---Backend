@@ -71,7 +71,6 @@ router.get("/", async function (req, res, next) {
     }
     // if they do match, pass in 'q' object with 'name' and 'category' as keys to filter out the products that match that query
     const products = await Product.findAll(q);
-    console.log("THis is products in routes/products, products");
     return res.json({ products });
 
     // "products": [

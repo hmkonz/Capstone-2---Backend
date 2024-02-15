@@ -20,10 +20,10 @@ const router = express.Router();
  * only for admin users to add new users. The new user being added can be an
  * admin.
  *
- * user = { email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, stripeCustomerId }
+ * user = { email, name, stripeCustomerId }
  *
  * This returns the newly created user and an authentication token for them:
- *  {user: { email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, stripeCustomerId }, token }
+ *  {user: { email, name, stripeCustomerId }, token }
  *
  * Authorization required: login and user logged in must be an Admin (middleware function
  * ensureAdmin checks for this)
@@ -46,7 +46,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
   }
 });
 
-/** GET /api/users => { users: [ {email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, stripeCustomerId }, ... ] }
+/** GET /api/users => [{ email, name, stripeCustomerId }, ... ] }
  *
  * Returns list of all users.
  *
@@ -66,7 +66,7 @@ router.get("/", ensureAdmin, async function (req, res, next) {
  *
  * Finds user with 'email'
  *
- * Returns { email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, stripeCustomerId }
+ * Returns { email, name, stripeCustomerId }
  *
  * Authorization required: log in. Getting information on a specific user is only permitted by an admin or that user (middleware function ensureCorrectUserOrAdmin checks for this)
  **/
@@ -87,12 +87,11 @@ router.get(
 
 /** PATCH /api/users/[email] { user } => { user }
  *
- * Data can include:
- *   { email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, password, stripeCustomerId }
+ * Data can include: { email, name, password, stripeCustomerId }
  *
  * Updates data for user with 'email'
  *
- * Returns { email, firstNameBilling, lastNameBilling, billingAddress, firstNameShipping, lastNameShipping, shippingAddress, phone, stripeCustomerId }
+ * Returns { email, name, password, stripeCustomerId }
  *
  * Authorization required: log in. Updating the details of a specific user is only permitted by an admin or by that user (middleware function ensureCorrectUserOrAdmin checks for this)
  **/

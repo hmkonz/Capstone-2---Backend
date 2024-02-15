@@ -74,7 +74,8 @@ class Product {
   // example: GET /products/?name=Bison&category=DogFood
   static async findAll({ name, category } = {}) {
     // retrieve all products in the database
-    let query = `SELECT name,
+    let query = `SELECT id,
+                        name,
                         ingredients,
                         calorie_count,
                         category,
