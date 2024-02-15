@@ -70,7 +70,7 @@ class Order {
     return order;
   }
 
-  /** Given a users 'user_id', return their order
+  /** Given a users 'user_id', return their orders
    *
    * Returns [{ id, user_id, stripe_customer_id, payment_intent_id, product_id, product_name, product_price, product_quantity, subtotal, total, shipping, delivery_status, payment_status, timestamp }, ...]
    *
@@ -99,7 +99,7 @@ class Order {
 
     // set 'orders' equal to the result of the query
     const orders = result.rows;
-    console.log("THis is result in models/order", result);
+    console.log("THis is orders in models/order", orders);
 
     // if there are no results from the query (orders is an empty array), throw an error
     if (!orders.length) throw new NotFoundError(`No orders have been made yet`);
