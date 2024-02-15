@@ -32,16 +32,15 @@ router.post("/", async (req, res) => {
 });
 
 /**
- *  GET /api/orders/:userId  =>
+ *  GET /api/orders/:user_id  =>
  *   { orders: [{ id, date, productName, quantity, price, subtotal, paymentMethod,
  *                userId }, ...]}
  *
- *  Retrieves all orders os user with 'id'
+ *  Retrieves all orders of user with 'id'
  *
- * Authorization required: user or admin must be logged in
  */
 
-router.get("/:userId", async function (req, res, next) {
+router.get("/:user_id", async (req, res, next) => {
   try {
     // retrieve the orders of a specific user
     const orders = await Order.getUserOrders(req.params.id);
