@@ -1,66 +1,11 @@
 "use strict";
 
 const db = require("../db");
-const { BadRequestError, NotFoundError } = require("../expressError");
-const { sqlForPartialUpdate } = require("../helpers/sql");
+const { NotFoundError } = require("../expressError");
 
 /** Related functions for products */
 
 class Product {
-  /** Create a product (from data), update db, return new product data.
-   *
-   * data should be { name, ingredients, calorie_count, category, price, image_url1, image_url2, image_url3 }
-   *
-   * Returns { name, ingredients, calorie_count, category, price, image_url1, image_url2, image_url3}
-   *
-   * Throws BadRequestError if product already in database.
-   * */
-
-  static async create({
-    id,
-    name,
-    ingredients,
-    calorie_count,
-    category,
-    price,
-    image_url1,
-    image_url2,
-    image_url3,
-  }) {
-    // check to see if product name already exists before creating it
-    const duplicateCheck = await db.query(
-      `SELECT name
-            FROM products
-            WHERE name = $1`,
-      [name]
-    );
-
-    if (duplicateCheck.rows[0])
-      throw new BadRequestError(`Duplicate product: ${name}`);
-
-    // add new product data (from req.body) to database and return new product data
-    const result = await db.query(
-      `INSERT INTO products
-            (id, name, ingredients, calorie_count, category, price, image_url1, image_url2, image_url3)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-            RETURNING id, name, ingredients, calorie_count, category, price, image_url1, image_url2, image_url3`,
-      [
-        id,
-        name,
-        ingredients,
-        calorie_count,
-        category,
-        price,
-        image_url1,
-        image_url2,
-        image_url3,
-      ]
-    );
-    const product = result.rows[0];
-
-    return product;
-  }
-
   /** Find all products (optional filter on name, category)
    *
    * optional filters on:
@@ -187,15 +132,15 @@ class Product {
     // ]
   }
 
-  /** Given a product category (DogFood or CatFood), return data from the products in that category
+  /** Given a product category (DogFood or CatFood), return data of the products in that category
    *
-   * Returns [{ id, name, ingredients, calorie_count, category, price, weight, image_url1, image_url2, image_url3  }, ...]
+   * Returns [{ id, name, image_url1, image_url2, image_url3  }, ...]
    *
    * Throws NotFoundError if not found.
    **/
 
   static async getProductByCategory(category) {
-    // retrieve the product data with the 'category' found in request URL
+    // retrieve all the products of a given category
     const productRes = await db.query(
       `SELECT id,
               name,
@@ -206,7 +151,7 @@ class Product {
       WHERE category = $1`,
       [category]
     );
-    // set 'product' equal to the result of the query
+    // set 'products' equal to the result of the query
     const products = productRes.rows;
 
     // if there are no results from the query (products is an empty array), throw an error
@@ -217,7 +162,7 @@ class Product {
 
   /** Given a product name, return data about that product
    *
-   * Returns [{ id, name, ingredients, calorie_count, category, price, weight, image_url2, image_url3  }, ...]
+   * Returns [{ id, name, ingredients, calorie_count, category, price, image_url2, image_url3  }, ...]
    *
    * Throws NotFoundError if name not found.
    **/
@@ -245,86 +190,6 @@ class Product {
       throw new NotFoundError(`No product with name ${name}`);
 
     return product;
-  }
-
-  /** Update product data with `data`.
-   *
-   * This is a "partial update" --- it's fine if data doesn't contain all the
-   * fields; this only changes provided ones.
-   *
-   * Data can include: {id, name, ingredients, calorie_count, category, price, weight, image_url1, image_url2, image_url3 }
-   *
-   * Returns {id, name, ingredients, calorie_count, category, price, weight, image_url2, image_url3 }
-   *
-   * Throws NotFoundError if not found.
-   */
-
-  static async update(name, data) {
-    // setCols = "ingredients"=$1, "calorie_count"=$2, "category"=$3,
-    //        "price"=$4, "image_url1"=$5, image_url2"=$6, "image_url3"=$7
-    // values = an array of key/value pairs of data in request body
-    //      (i.e. values = [  '7',
-    //                        'Whitefish, duck, etc',
-    //                        '301 kcal/cup',
-    //                        'CatFood',
-    //                        '25.00',
-    //                        '/images/CatFood_WhitefishDuck.png',
-    //                        '/images/Screenshot3.png',
-    //                         NULL
-    //                    ]
-
-    const { setCols, values } = sqlForPartialUpdate(data, {
-      ingredients: "ingredient",
-      calorie_count: "calorie_count",
-      category: "category",
-      price: "price",
-      image_url1: "image_url1",
-      image_url2: "image_url2",
-      image_url3: "image_url3",
-    });
-
-    // set column for WHERE expression. VarIdx: "name" = $7
-    const nameVarIdx = "$" + (values.length + 1);
-
-    // create the SQL query for updating the products table
-    const querySql = `UPDATE products 
-                        SET ${setCols} 
-                        WHERE name = ${nameVarIdx} 
-                        RETURNING id,
-                                  name,
-                                  ingredients,
-                                  calorie_count,
-                                  category,
-                                  price,
-                                  image_url1,
-                                  image_url2,
-                                  image_url3`;
-
-    // retrieve the results of the query above 'querySql' with the values in the request body 'values' and 'name' from the request URL passed in
-    const result = await db.query(querySql, [...values, name]);
-    const products = result.rows;
-
-    if (!products.length) throw new NotFoundError(`No product: ${name}`);
-
-    return products;
-  }
-
-  /** Delete product with specific name from database; returns undefined.
-   *
-   * Throws NotFoundError if product not found.
-   **/
-
-  static async removeName(name) {
-    const result = await db.query(
-      `DELETE
-             FROM products
-             WHERE name = $1
-             RETURNING name`,
-      [name]
-    );
-    const product = result.rows;
-
-    if (!product.length) throw new NotFoundError(`No product: ${name}`);
   }
 }
 

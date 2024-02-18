@@ -17,14 +17,6 @@
               "hmkonz@yahoo.com"
           ]
       },
-      "name": {
-          "type": "string",
-          "default": "",
-          "title": "The name Schema",
-          "examples": [
-              "Winston"
-          ]
-      },
       "password": {
           "type": "string",
           "default": "",
@@ -32,21 +24,10 @@
           "examples": [
               "qwerty"
           ]
-      },
-      "stripe_customer_id": {
-           "type": "string",
-           "default": "",
-           "title": "The stripeCustomerId Schema",
-           "examples": [
-            "asdf1234"
-           ]
-
       }
   },
   "examples": [{
       "email": "hmkonz@yahoo.com",
-      "name": "Winston",
-      "password": "qwerty",
-      "stripe_customer_id": "asdf1234"
+      "password": "qwerty"
   }]
 }

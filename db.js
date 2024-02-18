@@ -1,22 +1,8 @@
 "use strict";
-/** Database setup for jobly. */
+/** Database setup for JustRealFoods */
 const { Client } = require("pg");
-// const { getDatabaseUri } = require("./config");
 
 let DB_URI;
-
-// if (process.env.NODE_ENV === "production") {
-//   db = new Client({
-//     connectionString: getDatabaseUri(),
-//     ssl: {
-//       rejectUnauthorized: false
-//     }
-//   });
-// } else {
-//   db = new Client({
-//     connectionString: getDatabaseUri()
-//   });
-// }
 
 if (process.env.NODE_ENV === "test") {
   DB_URI = "just_real_food_test";

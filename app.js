@@ -3,26 +3,19 @@
 // allows access to the process.env variables
 require("dotenv").config();
 
-/** Express app for Capstone 2 - just real food */
+/** Express app for Capstone 2 - Just Real Food */
 const express = require("express");
+// cors allows a front end client to make requests to a backend server
 const cors = require("cors");
-// // initializes a stripe client specifically for this account useing the account's secret key
-// const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const { NotFoundError } = require("./expressError");
 
-const {
-  authenticateUserJWT,
-  authenticateAdminJWT,
-} = require("./middleware/auth");
+const { authenticateUserJWT } = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
-const adminRoutes = require("./routes/admins");
 const productsRoutes = require("./routes/products");
-const cartsRoutes = require("./routes/cart");
-const ordersRoutes = require("./routes/orders");
 const stripeRoutes = require("./routes/stripe");
-
+// morgan is used to log requests and errors to the console
 const morgan = require("morgan");
 
 const app = express();
@@ -34,14 +27,10 @@ app.use(express.static("public"));
 app.use(morgan("tiny"));
 // authenticateJWT runs before every request (route)
 app.use(authenticateUserJWT);
-// app.use(authenticateAdminJWT);
 
 app.use("/api/auth", authRoutes);
-app.use("/api/cart", cartsRoutes);
 app.use("/api/users", usersRoutes);
-app.use("/api/admins", adminRoutes);
 app.use("/api/products", productsRoutes);
-app.use("/api/orders", ordersRoutes);
 app.use("/api/stripe", stripeRoutes);
 
 /** Handle 404 errors -- this matches everything */
