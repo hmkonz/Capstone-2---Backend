@@ -6,11 +6,6 @@
 require("dotenv").config();
 const express = require("express");
 const router = new express.Router();
-const cors = require("cors");
-const corsOptions = {
-  origin: "https://capstone-2-frontend-tqq5.onrender.com",
-  optionsSuccessStatus: 200,
-};
 
 // initializes a stripe client specifically for this account using the account's secret key
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -27,7 +22,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
  *
  */
 
-router.post("/checkout", cors(corsOptions), async function (req, res, next) {
+router.post("/checkout", async function (req, res, next) {
   // data in req.body will look like: i.e. { items: [ { id: 'price_1OhYRmDDC8UyWYkq3ktrE7bQ', name: 'Beef & Salmon', price: 98.49, quantity: 1 }, ... ], userId: {id: 3, email: 'winston@gmail.com', name: null}}
 
   // Stripe wants the data to look like: [{price: price_1OhYRmDDC8UyWYkq3ktrE7bQ, quantity:2}, {price: price_12hYRmDDC8UyWYkq3ktrE7bQ, quantity:2} ...]

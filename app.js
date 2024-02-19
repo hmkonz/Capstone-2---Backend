@@ -8,11 +8,6 @@ const express = require("express");
 // cors allows a front end client to make requests to a backend server
 const cors = require("cors");
 
-// const corsOptions = {
-//   origin: "https://capstone-2-frontend-tqq5.onrender.com",
-//   optionsSuccessStatus: 200,
-// };
-
 const { NotFoundError } = require("./expressError");
 
 const { authenticateUserJWT } = require("./middleware/auth");
@@ -25,7 +20,11 @@ const morgan = require("morgan");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:10000", "https://checkout.stripe.com"],
+  })
+);
 app.use(express.json());
 // preferred by Stripe
 app.use(express.static("public"));
