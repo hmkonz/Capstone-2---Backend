@@ -25,7 +25,7 @@ const morgan = require("morgan");
 
 const app = express();
 
-// app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 // preferred by Stripe
 app.use(express.static("public"));
