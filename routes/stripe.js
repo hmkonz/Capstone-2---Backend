@@ -107,8 +107,8 @@ router.post("/checkout", async function (req, res, next) {
     line_items: lineItems,
     mode: "payment",
     customer: customer.id,
-    success_url: "https://silky-servant.surge.sh/success",
-    cancel_url: "https://silky-servant.surge.sh/cancel",
+    success_url: "https://capstone-2-frontend-tqq5.onrender.com/success",
+    cancel_url: "https://capstone-2-frontend-tqq5.onrender.com/cancel",
   });
 
   return res.send({ url: session.url });
