@@ -111,7 +111,7 @@ router.post("/checkout", async function (req, res, next) {
     cancel_url: "https://capstone-2-frontend-tqq5.onrender.com/cancel",
   });
 
-  return res.send({ url: session.url });
+  return res.json({ url: session.url });
 });
 
 module.exports = router;
