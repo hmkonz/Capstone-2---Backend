@@ -6,7 +6,7 @@ require("dotenv").config();
 /** Express app for Capstone 2 - Just Real Food */
 const express = require("express");
 // cors allows a front end client to make requests to a backend server
-// const cors = require("cors");
+const cors = require("cors");
 
 // const corsOptions = {
 //   origin: "https://capstone-2-frontend-tqq5.onrender.com",
