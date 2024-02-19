@@ -107,8 +107,8 @@ router.post("/checkout", async function (req, res, next) {
     line_items: lineItems,
     mode: "payment",
     customer: customer.id,
-    success_url: "http://localhost:3000/success",
-    cancel_url: "http://localhost:3000/cancel",
+    success_url: "https://silky-servant.surge.sh/success",
+    cancel_url: "https://silky-servant.surge.sh/cancel",
   });
 
   return res.send({ url: session.url });
