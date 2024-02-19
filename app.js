@@ -22,7 +22,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:10000", "https://checkout.stripe.com"],
+    origin: [
+      "https://capstone-2-backend-jizp.onrender.com",
+      "https://checkout.stripe.com",
+    ],
   })
 );
 app.use(express.json());
