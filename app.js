@@ -20,14 +20,7 @@ const morgan = require("morgan");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: [
-      "https://capstone-2-backend-jizp.onrender.com",
-      "https://checkout.stripe.com",
-    ],
-  })
-);
+app.use(cors());
 app.use(express.json());
 // preferred by Stripe
 app.use(express.static("public"));
