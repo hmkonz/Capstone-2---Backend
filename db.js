@@ -1,19 +1,22 @@
 "use strict";
 /** Database setup for JustRealFoods */
 const { Client } = require("pg");
+const { getDatabaseUri } = require("./config");
 
-let DB_URI;
+let db;
 
-if (process.env.NODE_ENV === "test") {
-  DB_URI = "just_real_food_test";
+if (process.env.NODE_ENV === "production") {
+  db = new Client({
+    connectionString: getDatabaseUri(),
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
 } else {
-  DB_URI = "just_real_food";
+  db = new Client({
+    connectionString: getDatabaseUri(),
+  });
 }
-
-let db = new Client({
-  host: "/var/run/postgresql/",
-  database: DB_URI,
-});
 
 db.connect();
 

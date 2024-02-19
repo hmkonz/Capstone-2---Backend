@@ -107,7 +107,7 @@ router.post("/checkout", async function (req, res, next) {
     line_items: lineItems,
     mode: "payment",
     customer: customer.id,
-    success_url: "http://localhost:3001/success",
+    success_url: "http://localhost:3000/success",
     cancel_url: "http://localhost:3000/cancel",
   });
 
