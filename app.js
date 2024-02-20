@@ -20,7 +20,8 @@ const morgan = require("morgan");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: "https://capstone-2-frontend-tqq5.onrender.com" }));
+
 app.use(express.json());
 // preferred by Stripe
 app.use(express.static("public"));
