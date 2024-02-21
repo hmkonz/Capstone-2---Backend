@@ -107,8 +107,10 @@ router.post("/checkout", async function (req, res, next) {
     line_items: lineItems,
     mode: "payment",
     customer: customer.id,
-    success_url: "https://capstone-2-frontend-tqq5.onrender.com/success",
-    cancel_url: "https://capstone-2-frontend-tqq5.onrender.com/cancel",
+    success_url: "https://willing-summer.surge.sh/success",
+    cancel_url: "https://willing-summer.surge.sh/cancel",
+    // success_url: "https://capstone-2-frontend-tqq5.onrender.com/success",
+    // cancel_url: "https://capstone-2-frontend-tqq5.onrender.com/cancel",
   });
 
   return res.json({ url: session.url });
