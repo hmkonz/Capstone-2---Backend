@@ -22,31 +22,10 @@ const app = express();
 
 app.use(cors());
 
-// Set middleware of CORS
-// app.use((req, res, next) => {
-//   res.setHeader(
-//     "Access-Control-Allow-Origin",
-//     "https://capstone-2-frontend-tqq5.onrender.com"
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS,CONNECT,TRACE"
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Content-Type, Authorization, X-Content-Type-Options, Accept, X-Requested-With, Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
-//   );
-//   res.setHeader("Access-Control-Allow-Credentials", true);
-//   res.setHeader("Access-Control-Allow-Private-Network", true);
-//   res.setHeader("Access-Control-Max-Age", 7200);
-
-//   next();
-// });
-
 app.use(express.json());
 // preferred by Stripe
 app.use(express.static("public"));
-app.use(express.static("src"));
+
 app.use(morgan("tiny"));
 // authenticateJWT runs before every request (route)
 app.use(authenticateUserJWT);

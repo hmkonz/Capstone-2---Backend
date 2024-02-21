@@ -111,9 +111,6 @@ router.post("/checkout", async function (req, res, next) {
     cancel_url: "https://capstone-2-frontend-tqq5.onrender.com/cancel",
   });
 
-  console.log("THis is customer", customer);
-  console.log("THis is session", session);
-
   return res.json({ url: session.url });
 });
 
